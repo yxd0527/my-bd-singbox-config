@@ -1,0 +1,186 @@
+{
+  "log": {
+    "level": "warn",
+    "output": "./配置/box.log",
+    "timestamp": true
+  },
+  "providers": [
+    {
+      "type": "local",
+      "tag": "百度直连",
+      "path": "./配置/百度.json"
+    },
+    {
+      "type": "remote",
+      "tag": "订阅",
+      "url": "https://sub-1.smjcdh.top/smjc/api/v1/client/subscribe?token=ea6706e7d5f265d9ee3a875f03cf628a",
+      "path": "./配置/订阅.json",
+      "auto_detect": true
+    }
+  ],
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "store_dns": true
+    },
+    "clash_api": {
+      "default_mode": "Rule",
+      "external_controller": "127.0.0.1:9090",
+      "external_ui": "配置/UI",
+      "external_ui_download_url": "https://v6.gh-proxy.org/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages-no-fonts.zip",
+      "secret": "yxd1120"
+    }
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns-hosts",
+        "type": "hosts",
+        "predefined": {
+          "dns.alidns.com": ["223.5.5.5", "223.6.6.6"],
+          "doh.pub": ["1.12.12.21", "120.53.53.53"],
+          "cloudflare-dns.com": ["104.16.248.249", "104.16.249.249"],
+          "dns.google": ["8.8.8.8", "8.8.4.4"]
+        }
+      },
+      {
+        "type": "quic",
+        "tag": "dns-ali",
+        "server": "dns.alidns.com",
+        "domain_resolver": "dns-hosts",
+        "detour": "国内出口"
+      },
+      {
+        "type": "https",
+        "tag": "dns-tx",
+        "server": "doh.pub",
+        "domain_resolver": "dns-hosts",
+        "detour": "国内出口"
+      },
+      {
+        "type": "h3",
+        "tag": "dns-cloudflare",
+        "server": "cloudflare-dns.com",
+        "domain_resolver": "dns-hosts",
+        "detour": "国外出口"
+      },
+      {
+        "type": "https",
+        "tag": "dns-google",
+        "server": "dns.google",
+        "domain_resolver": "dns-hosts",
+        "detour": "国外出口"
+      },
+      {
+        "type": "group",
+        "tag": "dns-国内",
+        "servers": ["dns-ali", "dns-tx"]
+      },
+      {
+        "type": "group",
+        "tag": "dns-国外",
+        "servers": ["dns-cloudflare", "dns-google"]
+      }
+    ],
+    "rules": [
+      {
+        "rule_set": "geosite-geolocation-!cn",
+        "server": "dns-国外"
+      },
+      {
+        "action": "evaluate",
+        "server": "dns-国内"
+      }
+    ],
+    "final": "dns-国内",
+    "reverse_mapping": true,
+    "optimistic": true
+  },
+  "inbounds": [
+    {
+      "type": "ebpf",
+      "tag": "ebpf-in",
+      "redirect_address": ["127.128.0.0/9"],
+      "bypass_rule_set": ["lanip"]
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "直连"
+    },
+    {
+      "type": "selector",
+      "tag": "国内出口",
+      "providers": ["百度直连"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "国外出口",
+      "providers": ["订阅"],
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "UDP",
+      "outbounds": ["直连","国外出口"],
+      "default": "直连",
+      "interrupt_exist_connections": true
+    }    
+  ],
+  "route": {
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "geosite-geolocation-!cn",
+        "url": "https://fastly.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-geolocation-!cn.srs",
+        "path": "./配置/geosite-geolocation-!cn.srs",
+        "download_detour": "直连"
+      },
+      {
+        "type": "remote",
+        "tag": "telegramip",
+        "url": "https://v6.gh-proxy.org/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/telegramip.srs",
+        "path": "./配置/telegramip.srs",
+        "download_detour": "直连"
+      },
+      {
+        "type": "inline",
+        "tag": "lanip",
+        "rules": [{"ip_cidr": ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fc00::/7"]}]
+      },
+      {
+        "type": "inline",
+        "tag": "wechat",
+        "rules": [
+          {
+            "domain_suffix": [
+              "weixin.qq.com",
+              "wx.qq.com",
+              "wechat.qq.com",
+              "servicewechat.com",
+              "tenpay.com",
+              "qpic.cn",
+              "qlogo.cn"
+            ]
+          }
+        ]
+      }
+    ],
+    "rules": [
+      {"rule_set": "wechat", "outbound": "直连"},
+      {"rule_set": ["telegramip"], "outbound": "国外出口"},
+      {"action": "sniff"},
+      {"protocol": "dns", "action": "hijack-dns"},
+      {"rule_set": "geosite-geolocation-!cn", "outbound": "国外出口"},
+      {"ip_is_private": true, "outbound": "直连"},
+      {"network": "udp", "outbound": "UDP"}
+    ],
+    "final": "国内出口",
+    "auto_detect_interface": true,
+    "default_domain_resolver": {
+      "server": "dns-国内"
+    }
+  }
+}

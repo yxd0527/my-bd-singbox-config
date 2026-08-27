@@ -1,0 +1,40 @@
+{
+  "outbounds": [
+    {
+      "type": "http",
+      "tag": "广州",
+      "server": "183.240.98.84",
+      "server_port": 443,
+      "headers": {
+        "Host": "pushbos.baidu.com",
+        "X-T5-Auth": "1109293052",
+        "Connection": "Keep-Alive",
+        "User-Agent": "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 16; Xiaomi 17 Pro Build/BP2A.250605.031.A3) baiduboxapp/13.10.0.10 (Baidu; P1 16)"
+      }
+    },
+    {
+      "type": "http",
+      "tag": "南京",
+      "server": "36.155.169.188",
+      "server_port": 443,
+      "headers": {
+        "Host": "pushbos.baidu.com",
+        "X-T5-Auth": "1109293052",
+        "Connection": "Keep-Alive",
+        "User-Agent": "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 16; Xiaomi 17 Pro Build/BP2A.250605.031.A3) baiduboxapp/13.10.0.10 (Baidu; P1 16)"
+      }
+    },
+    {
+      "type": "http",
+      "tag": "Baidu",
+      "server": "cloudnproxy.baidu.com",
+      "server_port": 443,
+      "headers": {
+        "Host": "pushbos.baidu.com",
+        "X-T5-Auth": "1109293052",
+        "Connection": "Keep-Alive",
+        "User-Agent": "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 16; Xiaomi 17 Pro Build/BP2A.250605.031.A3) baiduboxapp/13.10.0.10 (Baidu; P1 16)"
+      }
+    }
+  ]
+}

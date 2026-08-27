@@ -1,0 +1,155 @@
+{
+  "log": {
+    "level": "warn",
+    "output": "配置/box.log",
+    "timestamp": true
+  },
+  "providers": [
+    {
+      "type": "local",
+      "tag": "国内订阅",
+      "path": "./配置/百度.json"
+    }
+  ],
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "store_dns": true
+    },
+    "clash_api": {
+      "default_mode": "Rule",
+      "external_controller": "0.0.0.0:9090",
+      "external_ui": "配置/UI",
+      "external_ui_download_url": "https://v6.gh-proxy.com/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages-no-fonts.zip"
+    }
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns-hosts",
+        "type": "hosts",
+        "predefined": {
+          "dns.alidns.com": [
+            "223.5.5.5",
+            "223.6.6.6"
+          ],
+          "doh.pub": [
+            "1.12.12.21",
+            "120.53.53.53"
+          ]
+        }
+      },
+      {
+        "type": "quic",
+        "tag": "dns-ali",
+        "server": "dns.alidns.com",
+        "domain_resolver": "dns-hosts",
+        "detour": "国内出口"
+      },
+      {
+        "type": "https",
+        "tag": "dns-tx",
+        "server": "doh.pub",
+        "domain_resolver": "dns-hosts",
+        "detour": "国内出口"
+      },
+      {
+        "type": "group",
+        "tag": "dns-国内",
+        "servers": [
+          "dns-ali",
+          "dns-tx"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "action": "evaluate",
+        "server": "dns-国内"
+      },
+      {
+        "action": "respond"
+      }
+    ],
+    "final": "dns-国内",
+    "reverse_mapping": true,
+    "optimistic": true
+  },
+  "inbounds": [
+    {
+      "type": "ebpf",
+      "tag": "ebpf-in",
+      "redirect_address": [
+        "127.128.0.0/9"
+      ],
+      "bypass_rule_set": [
+        "lanip"
+      ],
+      "shared_network": {
+        "enabled": true,
+        "include_interface": [
+          "wlan2"
+        ]
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "直连"
+    },
+    {
+      "type": "selector",
+      "tag": "国内出口",
+      "outbounds": [
+        "国内手动"      
+        "直连",
+      ],
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "国内手动",
+      "providers": [
+        "国内订阅"
+      ],
+      "interrupt_exist_connections": true
+    }
+  ],
+  "route": {
+    "rule_set": [
+      {
+        "type": "inline",
+        "tag": "lanip",
+        "rules": [
+          {
+            "ip_cidr": [
+              "10.0.0.0/8",
+              "172.16.0.0/12",
+              "192.168.0.0/8",
+              "fc00::/7"
+            ]
+          }
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "action": "sniff"
+      },
+      {
+        "protocol": "dns",
+        "action": "hijack-dns"
+      },
+      {
+        "ip_is_private": true,
+        "outbound": "直连"
+      }
+    ],
+    "final": "国内出口",
+    "auto_detect_interface": true,
+    "default_domain_resolver": {
+      "server": "dns-国内"
+    }
+  }
+}
