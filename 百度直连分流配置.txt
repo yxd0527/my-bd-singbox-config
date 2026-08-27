@@ -1,0 +1,224 @@
+providers-anchor:
+  p: &p {type: http, interval: 86400, health-check: {enable: true, url: 'https://www.gstatic.com/generate_204', interval: 300}}
+  b: &b {type: http, port: 443, udp: false, skip-cert-verify: true, headers: {Host: cloudnproxy.baidu.com, X-T5-Auth: 1050504963, User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Build/RP1A.200720.011) baiduboxapp/13.10.0.10 (Baidu; P1 11)"}}
+
+proxy-providers:
+  订阅一:
+    <<: *p
+    url: 
+    override:
+      additional-prefix: "[一] "
+
+  订阅二:
+    <<: *p
+    url: 
+    override:
+      additional-prefix: "[二] "
+
+mixed-port: 7890
+ipv6: false
+allow-lan: true
+log-level: silent
+tcp-concurrent: true
+
+external-controller: 127.0.0.1:9090
+secret: "clashyh"
+external-ui: ui
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+
+find-process-mode: strict
+global-client-fingerprint: chrome
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+sniffer:
+  enable: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  skip-domain:
+    - 'Mijia Cloud'
+    - '+.push.apple.com'
+    - '+.wechat.com'
+    - '+.qpic.cn'
+    - '+.qq.com'
+    - '+.wechatapp.com'
+    - '+.vivox.com'
+    - '+.oray.com'
+    - '+.sunlogin.net'
+
+tun:
+  enable: true
+  stack: mixed
+  dns-hijack:
+    - "any:53"
+    - "tcp://any:53"
+  auto-route: true
+  auto-redirect: true
+  auto-detect-interface: true
+
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    - 'rule-set:private,cn,fakeip'
+  default-nameserver:
+    - 119.29.29.29
+    - 223.5.5.5
+  nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+
+proxies: 
+  - name: 直连
+    type: direct
+    udp: true
+    
+  - name: 拒绝连接
+    type: reject
+    udp: true
+
+  - name: 🇨🇳 南京 1 电信百度直连
+    server: 180.101.50.208
+    <<: *b
+
+  - name: 🇨🇳 南京 2 电信百度直连
+    server: 180.101.50.249
+    <<: *b
+
+  - name: 🇨🇳 广州 电信百度直连
+    server: 14.215.182.75
+    <<: *b
+
+  - name: 🇨🇳 北京 1 电信百度直连
+    server: 220.181.7.1
+    <<: *b
+
+  - name: 🇨🇳 北京 2 电信百度直连
+    server: 220.181.33.174
+    <<: *b
+
+  - name: 🇨🇳 北京 3 电信百度直连
+    server: 220.181.111.189
+    <<: *b
+
+  - name: 🇨🇳 域名解析
+    server: cloudnproxy.baidu.com
+    <<: *b
+
+  - name: 🇨🇳 保定 1 联通百度直连
+    server: 110.242.70.68
+    <<: *b
+
+  - name: 🇨🇳 保定 2 联通百度直连
+    server: 110.242.70.69
+    <<: *b
+
+  - name: 🇨🇳 南京 联通百度直连
+    server: 153.3.237.117
+    <<: *b
+
+  - name: 🇨🇳 苏州 1 联通百度直连
+    server: 157.0.146.158
+    <<: *b
+
+  - name: 🇨🇳 广州 移动百度直连
+    server: 183.240.98.84
+    <<: *b
+
+groups-anchor:
+  u: &u {type: url-test, url: 'https://www.gstatic.com/generate_204', interval: 300, tolerance: 100}
+
+proxy-groups:
+  - name: 国外
+    type: select
+    icon: https://ghproxy.net/raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png
+    proxies:
+      - 代理节点
+      - 直连
+      - 电信百度直连
+      - 联通百度直连
+      - 移动百度直连
+      - 拒绝连接
+
+  - name: 国内
+    type: select
+    icon: https://ghproxy.net/raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Direct.png
+    proxies:
+      - 直连
+      - 电信百度直连
+      - 联通百度直连
+      - 移动百度直连
+      - 国外
+
+  - name: UDP开关
+    type: select
+    icon: https://ghproxy.net/raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Qure.png
+    proxies:
+      - 直连
+      - 拒绝连接
+
+  - name: 代理节点
+    <<: *u
+    include-all-providers: true
+    icon: https://ghproxy.net/raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png
+
+  - name: 电信百度直连
+    <<: *u
+    include-all-proxies: true
+    icon: https://ghproxy.net/raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/BosLife_1.png
+    filter: '电信百度直连'
+
+  - name: 联通百度直连
+    <<: *u
+    include-all-proxies: true
+    icon: https://ghproxy.net/raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/BosLife_1.png
+    filter: '联通百度直连'
+
+  - name: 移动百度直连
+    <<: *u
+    include-all-proxies: true
+    icon: https://ghproxy.net/raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/BosLife_1.png
+    filter: '移动百度直连'
+
+rule-anchor:
+  t: &t {type: http, interval: 86400, behavior: domain, format: text}
+  d: &d {type: http, interval: 86400, behavior: domain, format: mrs}
+  i: &i {type: http, interval: 86400, behavior: ipcidr, format: mrs}
+
+rule-providers:
+  fakeip:
+    <<: *t
+    url: "https://raw.githubusercontent.com/juewuy/ShellCrash/refs/heads/dev/public/fake_ip_filter.list"
+  cn:
+    <<: *d
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"
+  private:
+    <<: *d
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"
+  proxy:
+    <<: *d
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"
+  private_ip:
+    <<: *i
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"
+  cn_ip:
+    <<: *i
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"
+
+rules:
+  - NETWORK,UDP,UDP开关
+  - RULE-SET,private_ip,DIRECT,no-resolve
+  - RULE-SET,proxy,国外
+  - RULE-SET,cn,国内
+  - RULE-SET,cn_ip,国内
+  - MATCH,国外

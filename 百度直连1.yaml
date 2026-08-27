@@ -1,0 +1,96 @@
+proxies:
+#百度直连↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+ - name: 百度直连动态①旧
+   server: cloudnproxy.baidu.com
+   type: http
+   port: 443
+   headers:
+     X-T5-Auth: 683556433
+     Host: 153.3.236.22:443
+################################
+ - name: 百度直连动态②旧
+   server: cloudnproxy.n.shifen.com
+   type: http
+   port: 443
+   headers:
+     X-T5-Auth: 683556433
+     Host: 153.3.236.22:443
+################################
+ - name: 百度直连静态①新
+   server: 153.3.237.117
+   port: 443
+   type: http
+   skip-cert-verify: true
+   headers:
+     Host: pushbos.baidu.com
+     X-T5-Auth: 1109293052
+     Connection: Keep-Alive
+     User-Agent: okhttp/3.14.9 Dalvik/2.1.0 (Linux; U; Android 15; MEIZU 20 Pro Build/FLYME 12.5.0.0A) baiduboxapp/15.40.0.10 (Baidu; P1 15)
+################################
+ - name: 百度直连动态②新
+   server: cloudnproxy.baidu.com
+   port: 443
+   type: http
+   skip-cert-verify: true
+   headers:
+     Host: pushbos.baidu.com
+     X-T5-Auth: 1109293052
+     Connection: Keep-Alive
+     User-Agent: okhttp/3.14.9 Dalvik/2.1.0 (Linux; U; Android 15; MEIZU 20 Pro Build/FLYME 12.5.0.0A) baiduboxapp/15.40.0.10 (Baidu; P1 15)
+################################
+ - name: 百度直连动态③新
+   server: cloudnproxy.n.shifen.com
+   port: 443
+   type: http
+   skip-cert-verify: true
+   headers:
+     Host: pushbos.baidu.com
+     X-T5-Auth: 1109293052
+     Connection: Keep-Alive
+     User-Agent: okhttp/3.14.9 Dalvik/2.1.0 (Linux; U; Android 15; MEIZU 20 Pro Build/FLYME 12.5.0.0A) baiduboxapp/15.40.0.10 (Baidu; P1 15)
+#百度直连↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+################################
+#钉钉直连↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+ - name: 钉钉直连动态①旧
+   server: cloudnproxy.baidu.com
+   type: http
+   port: 443
+   headers:
+     X-T5-Auth: 683556433
+     Host: 153.3.236.22:443
+     With-At: gw.alicdn.com
+#钉钉直连↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+################################
+#电信彩信↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+ - name: 电信彩信动态①旧
+   server: cloudnproxy.baidu.com
+   type: http
+   port: 443
+   headers:
+     X-T5-Auth: 683556433
+     Host: 153.3.236.22:443
+     dialer-proxy: WAP
+ - name: 电信彩信静态
+   type: http
+   server: 10.0.0.200
+   port: 80
+#电信彩信↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+################################
+#节点分配↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+proxy-groups:
+ - name: 百度直连
+   icon: "https://v6.gh-proxy.org/https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Baidu_02.png"
+   type: select
+   proxies:
+     - 百度直连动态①旧
+     - 百度直连动态②旧
+     - 百度直连静态①新
+     - 百度直连动态②新
+     - 百度直连动态③新
+     - 钉钉直连动态①旧
+     - 电信彩信动态①旧
+     - 电信彩信静态
+rules:
+ - DOMAIN-KEYWORD,ingest.sentry,REJECT
+ - MATCH,百度直连
+#节点分配↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑

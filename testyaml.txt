@@ -1,0 +1,232 @@
+# Clash Meta 百度直连免流 - 国外套娃免流优化版
+port: 7890
+socks-port: 7891
+mixed-port: 7892
+allow-lan: true
+mode: rule
+log-level: info
+ipv6: false
+
+proxies:
+  - name: "家宽节点1"
+    type: vmess
+    server: 你的节点地址         # 地址 (address)
+    port: 6666                      # 端口 (port)
+    uuid: 67d9d4a3-XXXXXXXXX   # 用户 ID (id)
+    alterId: 0                      # 额外 ID (alterId)
+    cipher: auto                    # 加解密方式 (security)
+    network: ws                     # 传输协议 (network) 
+    ws-opts:
+      path: /                    # 路径 (path)
+      headers:
+        Host: v97.douyinvod.com    # Host
+        
+  - name: "WAP"
+    type: http
+    server: 10.0.0.200
+    port: 80
+
+  # ================== 百度直连全IP节点 ==================
+  - name: "[南京]电信"
+    type: http
+    server: 180.101.50.208
+    port: 443
+    headers:
+      X-T5-Auth: "683556433"
+      Host: "153.3.236.22:443"
+      User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)"
+
+  - name: "[保定]联通"
+    type: http
+    server: 110.242.70.68
+    port: 443
+    headers:
+      X-T5-Auth: "683556433"
+      Host: "153.3.236.22:443"
+      User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)"
+
+  - name: "[北京]电信"
+    type: http
+    server: 220.181.111.189
+    port: 443
+    headers:
+      X-T5-Auth: "683556433"
+      Host: "153.3.236.22:443"
+      User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)"
+
+  - name: "[广州]移动"
+    type: http
+    server: 183.240.98.84
+    port: 443
+    headers:
+      X-T5-Auth: "683556433"
+      Host: "153.3.236.22:443"
+      User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)"
+
+  - name: "[保定]联通2"
+    type: http
+    server: 110.242.70.69
+    port: 443
+    headers:
+      X-T5-Auth: "683556433"
+      Host: "153.3.236.22:443"
+      User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)"
+
+  - name: "[北京]电信2"
+    type: http
+    server: 220.181.33.174
+    port: 443
+    headers:
+      X-T5-Auth: "683556433"
+      Host: "153.3.236.22:443"
+      User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)"
+
+  - name: "[南京]联通"
+    type: http
+    server: 153.3.237.117
+    port: 443
+    headers:
+      X-T5-Auth: "683556433"
+      Host: "153.3.236.22:443"
+      User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)"
+
+  - name: "[南京]移动"
+    type: http
+    server: 36.155.169.188
+    port: 443
+    headers:
+      X-T5-Auth: "683556433"
+      Host: "153.3.236.22:443"
+      User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)"
+
+  - name: "[南京]电信2"
+    type: http
+    server: 180.101.50.249
+    port: 443
+    headers:
+      X-T5-Auth: "683556433"
+      Host: "153.3.236.22:443"
+      User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)"
+
+  - name: "[广州]电信"
+    type: http
+    server: 14.215.182.75
+    port: 443
+    headers:
+      X-T5-Auth: "683556433"
+      Host: "153.3.236.22:443"
+      User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)"
+
+  # 动态解析域名节点
+  - name: "动态解析"
+    type: http
+    server: cloudnproxy.n.shifen.com
+    port: 443
+    headers:
+      X-T5-Auth: "683556433"
+      Host: "153.3.236.22:443"
+      User-Agent: "okhttp/3.11.0 Dalvik/2.1.0 (Linux; U; Android 11; Redmi K30 5G Build/RKQ1.200826.002) baiduboxapp/11.0.5.12 (Baidu; P1 11)"
+
+# ================== 订阅 ==================
+proxy-providers:
+  MyAirport:
+    type: http
+    url: "你的机场订阅地址"
+    interval: 3600
+    path: ./providers/airport.yaml
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300
+
+# ================== 策略组 ==================
+proxy-groups:
+  - name: "百度直连"
+    type: select
+    proxies:
+      - "动态解析"
+      - "[南京]电信"
+      - "[保定]联通"
+      - "[北京]电信"
+      - "[广州]移动"
+      - "[保定]联通2"
+      - "[北京]电信2"
+      - "[南京]联通"
+      - "[南京]移动"
+      - "[南京]电信2"
+      - "[广州]电信"
+     
+      - WAP
+      - DIRECT
+
+  - name: "UDP转发"
+    type: select
+    proxies:
+      - "家宽节点1"
+      - DIRECT
+    use:
+      - MyAirport
+
+  - name: "机场节点"
+    type: select
+    use:
+      - MyAirport
+
+  # 关键：套娃模式（猫猫配置的核心）
+  - name: "套娃模式"
+    type: select
+    proxies:
+      - 机场节点
+    dialer-proxy: 百度直连   # 国外所有流量先走百度免流
+
+  - name: "国外流量"
+    type: select
+    proxies:
+      - 套娃模式
+      - 机场节点
+      - DIRECT
+
+  - name: "自动节点"
+    type: url-test
+    proxies:
+      - DIRECT
+      - 百度直连
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+
+
+# ================== DNS（关键！防泄漏） ==================
+dns:
+  enable: true
+  listen: 0.0.0.0:1053
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.0/16
+  nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+  fallback:
+    - https://dns.google/dns-query
+  proxy-server-nameserver:
+    - https://dns.alidns.com/dns-query
+  nameserver-policy:
+    'geosite:cn': https://dns.alidns.com/dns-query
+    'geosite:geolocation-!cn': https://dns.google/dns-query
+  fake-ip-filter:
+    - '*.lan'
+    - '*.local'
+    - '*.internal'
+    - 'geosite:cn'
+# ================== 规则 ==================
+rules:
+  - NETWORK,udp,UDP转发
+  - GEOSITE,cn,百度直连
+  - GEOIP,cn,百度直连
+  - DOMAIN-SUFFIX,baidu.com,百度直连
+  - DOMAIN-SUFFIX,bdstatic.com,百度直连
+  - DOMAIN-KEYWORD,baidu,百度直连
+  - GEOSITE,google,国外流量
+  - GEOSITE,youtube,国外流量
+  - DOMAIN-SUFFIX,github.com,国外流量
+  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+  - MATCH,国外流量
